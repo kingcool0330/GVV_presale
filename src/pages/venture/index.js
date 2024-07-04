@@ -9,7 +9,7 @@ import List from "./List";
 // load assets
 import "./venture.scss";
 
-const index = (props) => {
+const Index = (props) => {
   useEffect(() => {
     props.handleLoading(true);
     setTimeout(() => {
@@ -31,7 +31,7 @@ const index = (props) => {
   );
 };
 
-index.propTypes = {
+Index.propTypes = {
   handleLoading: PropTypes.func.isRequired,
 };
 
@@ -39,4 +39,4 @@ const mapStateToProps = (state) => ({
   loading: state.loading,
 });
 
-export default connect(mapStateToProps, { handleLoading })(index);
+export default connect(mapStateToProps, { handleLoading })(Index);

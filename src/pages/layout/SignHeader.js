@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { Link, useLocation } from "react-router-dom";
 import MenuIcon from "@mui/icons-material/Menu";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import Web3 from "web3";
 
 // import logo image
 import LogoImage from "../../assets/image/logo.png";
@@ -23,6 +24,9 @@ const SignHeader = () => {
   const [presaleMenuFlag, setPresaleMenuFalg] = useState(false);
   const [stakeMenuFlag, setStakeMenuFlag] = useState(false);
   const [ventureMenuFlag, setVentureMenuFlag] = useState(false);
+
+  // Connect button
+  const [account, setAccount] = useState("CONNECT");
 
   const handlePresaleMenuToggle = () => {
     setPresaleMenuFalg(!presaleMenuFlag);
@@ -57,6 +61,26 @@ const SignHeader = () => {
     ) {
       setVentureMenuFlag(false);
     }
+  };
+
+  const handleConnectWallet = async () => {
+    if (window.ethereum) {
+      try {
+        const web3 = new Web3(window.ethereum);
+        await window.ethereum.request({ method: "eth_requestAccounts" });
+        const accounts = await web3.eth.getAccounts();
+        setAccount(accounts[0]);
+      } catch (error) {
+        console.error("Error connecting to MetaMask:", error);
+      }
+    } else {
+      console.log("MetaMask not detected. Please install MetaMask.");
+    }
+  };
+
+  const handleDisConnectWallet = () => {
+    setAccount(null);
+    console.log("Disconnected from wallet");
   };
 
   useEffect(() => {
@@ -220,9 +244,25 @@ const SignHeader = () => {
             </div>
           </div>
           <div className="sign">
-            <button type="button" className="sign-btn">
-              {t("connect")}
-            </button>
+            {account ? (
+              <button
+                type="button"
+                onClick={() => handleDisConnectWallet()}
+                className="sign-btn"
+              >
+                <p>
+                  {account.substring(0, 6)}...{account.substring(37, 42)}
+                </p>
+              </button>
+            ) : (
+              <button
+                type="button"
+                onClick={() => handleConnectWallet()}
+                className="sign-btn"
+              >
+                {t("connect")}
+              </button>
+            )}
           </div>
         </div>
       </div>
