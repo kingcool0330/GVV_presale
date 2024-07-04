@@ -4,6 +4,7 @@ import { connect } from "react-redux";
 import { handleLoading } from "../../actions/loadingActions";
 import ErrorIcon from "@mui/icons-material/Error";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
+import BeatLoader from "react-spinners/BeatLoader";
 
 // load image assets
 import PresaleImage from "../../assets/image/presale-gvv.png";
@@ -14,10 +15,17 @@ import PresaleVideo from "../../assets/image/video.png";
 import "./presale.scss";
 import { useTranslation } from "react-i18next";
 
+// Contract Assets
+import Web3 from "web3";
+import CONTRACT_ADDRESS from "../../utils/config";
+import CONTRACT_ABI_GVV from "../../utils/gvv.json";
+import CONTRACT_ABI_PRESALE from "../../utils/presaleVesting.json";
+
 const Presale2 = (props) => {
   const { t } = useTranslation();
   const [presaleCost, setPresaleCost] = useState(0.23);
   const [presaleCount, setPresaleCount] = useState(1);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     props.handleLoading(true);
@@ -34,6 +42,57 @@ const Presale2 = (props) => {
     setPresaleCount(
       flag ? presaleCount + 1 : presaleCount === 1 ? 1 : presaleCount - 1
     );
+  };
+
+  const handleBuyGVV = async () => {
+    setLoading(true);
+    const accounts = await window.ethereum.request({ method: "eth_accounts" });
+
+    if (accounts.length > 0) {
+      try {
+        // Create Web3 instance
+        const web3Instance = new Web3(window.ethereum);
+
+        // Create contract instance
+        const presale_contractInstance = new web3Instance.eth.Contract(
+          CONTRACT_ABI_PRESALE,
+          CONTRACT_ADDRESS.PresaleVestingAddr[5]
+        );
+
+        try {
+          const response = await fetch(
+            "https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd"
+          );
+          const data = await response.json();
+
+          console.log(data);
+
+          const ethAmount = Number(presaleCost) / Number(data.ethereum.usd);
+
+          console.log(presaleCount, presaleCost, ethAmount);
+
+          // Correct way to call the contract method
+          const buytokenprogress = await presale_contractInstance.methods
+            .buyTokensByNativeCoin(String(presaleCount), String(2))
+            .send({
+              from: accounts[0],
+              value: web3Instance.utils.toWei(String(ethAmount), "ether"),
+            });
+
+          console.log("Transaction successful:", buytokenprogress);
+          setLoading(false);
+        } catch (error) {
+          console.log(error);
+          setLoading(false);
+        }
+      } catch (error) {
+        console.error("Error calling contract method:", error);
+        setLoading(false);
+      }
+    } else {
+      console.log("Please connect to MetaMask first");
+      setLoading(false);
+    }
   };
 
   return (
@@ -82,7 +141,14 @@ const Presale2 = (props) => {
                 </button>
               </div>
               <button type="button" className="presale-buy-btn">
-                {t("buy-sgvv")}
+                {!loading && t("buy-sgvv")}
+                <BeatLoader
+                  color={"#000000"}
+                  loading={loading}
+                  size={30}
+                  aria-label="Loading Spinner"
+                  data-testid="loader"
+                />
               </button>
             </div>
           </div>

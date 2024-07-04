@@ -26,7 +26,7 @@ const Presale = (props) => {
   const { t } = useTranslation();
   const [presaleCost, setPresaleCost] = useState(0.45);
   const [presaleCount, setPresaleCount] = useState(1);
-  let [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const override = {
     display: "block",
@@ -87,14 +87,18 @@ const Presale = (props) => {
             });
 
           console.log("Transaction successful:", buytokenprogress);
+          setLoading(false);
         } catch (error) {
           console.log(error);
+          setLoading(false);
         }
       } catch (error) {
         console.error("Error calling contract method:", error);
+        setLoading(false);
       }
     } else {
       console.log("Please connect to MetaMask first");
+      setLoading(false);
     }
   };
 
