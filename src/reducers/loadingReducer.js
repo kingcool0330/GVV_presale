@@ -1,8 +1,13 @@
-import { GET_LANGLOADING_DATA, GET_LOADING_DATA } from "../actions/constants";
+import {
+  GET_AUTHLOADING_DATA,
+  GET_LANGLOADING_DATA,
+  GET_LOADING_DATA,
+} from "../actions/constants";
 
 const initialState = {
   loading: false,
   langLoading: false,
+  authLoading: false,
 };
 
 export default function (state = initialState, action) {
@@ -16,6 +21,11 @@ export default function (state = initialState, action) {
       return {
         ...state,
         loading: action.payload,
+      };
+    case GET_AUTHLOADING_DATA:
+      return {
+        ...state,
+        authLoading: action.payload,
       };
     default:
       return state;

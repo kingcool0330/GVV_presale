@@ -23,7 +23,11 @@ const App = (props) => {
   const { i18n } = useTranslation();
 
   useEffect(() => {
-    if (props.loading.langLoading || props.loading.loading) {
+    if (
+      props.loading.langLoading ||
+      props.loading.loading ||
+      props.loading.authLoading
+    ) {
       NProgress.start();
     } else {
       NProgress.done();
@@ -43,7 +47,6 @@ const App = (props) => {
         <SignHeader />
         <Routes>
           <Route path="/" exact element={<Home />} />
-          <Route path="/login" exact element={<Login />} />
           <Route path="/presale" exact element={<Presale />} />
           <Route path="/presale1" exact element={<Presale1 />} />
           <Route path="/presale2" exact element={<Presale2 />} />
@@ -51,6 +54,8 @@ const App = (props) => {
           <Route path="/venture/*" exact element={<Venture />} />
         </Routes>
         <Footer />
+
+        <Login flag={props.auth.isAuthenticated} />
       </Router>
     </div>
   );
@@ -62,6 +67,7 @@ App.propTypes = {
 
 const mapStateToProps = (state) => ({
   loading: state.loading,
+  auth: state.auth,
 });
 
 export default connect(mapStateToProps, { handleLangLoading })(App);

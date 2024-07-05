@@ -6,11 +6,16 @@ import { handleLoading } from "../../actions/loadingActions";
 import ErrorIcon from "@mui/icons-material/Error";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import BeatLoader from "react-spinners/BeatLoader";
+import CloseIcon from "@mui/icons-material/Close";
 
 // load image assets
 import PresaleImage from "../../assets/image/presale-gvv.png";
 import PresaleOverviewImage from "../../assets/image/overview.png";
 import PresaleVideo from "../../assets/image/video.png";
+import EthereumImage from "../../assets/image/ethereum.png";
+import MaticImage from "../../assets/image/matic.webp";
+import UsdtImage from "../../assets/image/usdt.png";
+import BnbImage from "../../assets/image/bnb.png";
 
 // load style
 import "./presale.scss";
@@ -27,6 +32,7 @@ const Presale = (props) => {
   const [presaleCost, setPresaleCost] = useState(0.45);
   const [presaleCount, setPresaleCount] = useState(1);
   const [loading, setLoading] = useState(false);
+  const [buyModalFlag, setBuyModalFlag] = useState(false);
 
   const override = {
     display: "block",
@@ -102,6 +108,11 @@ const Presale = (props) => {
     }
   };
 
+  const handleBuyModal = () => {
+    document.body.style.overflow = !buyModalFlag ? "hidden" : "auto";
+    setBuyModalFlag(!buyModalFlag);
+  };
+
   return (
     <div className="presale">
       <div className="container">
@@ -147,7 +158,7 @@ const Presale = (props) => {
               <button
                 type="button"
                 className="presale-buy-btn"
-                onClick={() => handleBuyGVV()}
+                onClick={() => handleBuyModal()}
               >
                 {!loading && t("buy-sgvv")}
                 <BeatLoader
@@ -194,6 +205,42 @@ const Presale = (props) => {
               </button>
             </div>
           </div>
+        </div>
+      </div>
+
+      <div className={buyModalFlag ? "buy-modal up" : "buy-modal"}>
+        <div className="buy-section">
+          <button type="button" className="buy-item">
+            <img src={EthereumImage} className="coin-image" alt="coin" />
+            Ethereum
+          </button>
+          <button type="button" className="buy-item">
+            <img src={UsdtImage} className="coin-image" alt="coin" />
+            ERC20 USDT
+          </button>
+          <button type="button" className="buy-item">
+            <img src={MaticImage} className="coin-image" alt="coin" />
+            Matic
+          </button>
+          <button type="button" className="buy-item">
+            <img src={UsdtImage} className="coin-image" alt="coin" />
+            Polygon USDT
+          </button>
+          <button type="button" className="buy-item">
+            <img src={BnbImage} className="coin-image" alt="coin" />
+            BNB
+          </button>
+          <button type="button" className="buy-item">
+            <img src={UsdtImage} className="coin-image" alt="coin" />
+            BEP20 USDT
+          </button>
+          <button
+            type="button"
+            className="close-buy-modal"
+            onClick={handleBuyModal}
+          >
+            <CloseIcon />
+          </button>
         </div>
       </div>
     </div>
