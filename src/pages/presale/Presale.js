@@ -158,7 +158,7 @@ const Presale = (props) => {
               <button
                 type="button"
                 className="presale-buy-btn"
-                onClick={() => handleBuyModal()}
+                onClick={handleBuyModal}
               >
                 {!loading && t("buy-sgvv")}
                 <BeatLoader
