@@ -1,0 +1,133 @@
+.login {
+  display: flex;
+  width: 100%;
+  align-items: center;
+
+  .section {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    padding: 100px 0;
+    gap: 40px;
+
+    .login-section {
+      max-width: 620px;
+      width: 100%;
+      display: flex;
+      border-radius: 16px;
+      background-color: var(--chart-content-background-color);
+      padding: 30px 20px;
+      gap: 30px;
+      flex-direction: column;
+      position: relative;
+
+      @media (max-width: 768px) {
+        padding: 20px 10px;
+        gap: 20px;
+      }
+
+      .login-title {
+        margin-top: 10px;
+        font-size: 42px;
+        font-weight: bold;
+        text-transform: uppercase;
+        letter-spacing: 10px;
+
+        @media (max-width: 768px) {
+          font-size: 26px;
+        }
+      }
+
+      .sign-groups {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+
+        .sign-group {
+          display: flex;
+          flex-direction: row;
+          justify-content: center;
+          align-items: center;
+          border-radius: 12px;
+          width: 100%;
+          background-color: var(--background-color);
+
+          .sign-icon {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 60px;
+            padding-left: 20px;
+
+            * {
+              color: var(--footer-text-color);
+              font-size: 16px;
+            }
+          }
+
+          .sign-input {
+            border: none;
+            outline: none;
+            background-color: transparent;
+            height: 54px;
+            width: 100%;
+            font-size: 14px;
+
+            @media (max-width: 768px) {
+              height: 48px;
+            }
+
+            * {
+              background-color: var(--background-color);
+            }
+          }
+        }
+      }
+
+      .pruchase-btn {
+        height: 54px;
+        border-radius: 16px;
+        text-transform: uppercase;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: var(--base-yellow-color);
+        color: #050b21;
+        font-weight: bold;
+        letter-spacing: 2px;
+        font-size: 14px;
+        cursor: pointer;
+        transition: 0.2s all ease;
+
+        &:hover {
+          opacity: 0.8;
+        }
+
+        @media (max-width: 768px) {
+          height: 48px;
+        }
+      }
+
+      .close-btn {
+        position: absolute;
+        cursor: pointer;
+        top: 20px;
+        right: 20px;
+
+        @media (max-width: 768px) {
+          top: 10px;
+          right: 15px;
+        }
+
+        * {
+          font-size: 16px;
+        }
+      }
+    }
+  }
+}

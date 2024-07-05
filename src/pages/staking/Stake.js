@@ -1,69 +1,13 @@
 import React, { useEffect } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { Doughnut } from "react-chartjs-2";
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  ArcElement,
-  Title,
-  Tooltip,
-  Legend,
-} from "chart.js";
 import { handleLoading } from "../../actions/loadingActions";
 import { useTranslation } from "react-i18next";
 import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
+import DoughnutChart from "../../components/DoughnutChart";
 
 // load assets
 import AvatarImage from "../../assets/image/avatar.png";
-
-// Register the components
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  ArcElement,
-  Title,
-  Tooltip,
-  Legend
-);
-
-const DoughnutChart = () => {
-  const data = {
-    datasets: [
-      {
-        data: [45, 55], // 55% staked, 45% not staked
-        backgroundColor: ["#FCD34D", "#1E40AF"], // Colors for the chart
-        borderColor: ["#FCD34D", "#1E40AF"],
-      },
-    ],
-    labels: ["staked", "unstaked"],
-  };
-
-  const options = {
-    responsive: true,
-    plugins: {
-      legend: {
-        display: false,
-        position: "bottom",
-      },
-      tooltip: {
-        callbacks: {
-          title: (tooltipItem) => `${tooltipItem[0].raw}%`,
-          label: function (tooltipItem) {
-            return `${tooltipItem.label}`;
-          },
-        },
-      },
-    },
-  };
-
-  return <Doughnut data={data} options={options} />;
-};
 
 const Stake = (props) => {
   const { t } = useTranslation();

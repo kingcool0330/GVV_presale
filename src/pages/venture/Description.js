@@ -1,96 +1,12 @@
 import React, { useEffect } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { Doughnut } from "react-chartjs-2";
 import { handleLoading } from "../../actions/loadingActions";
 import { useTranslation } from "react-i18next";
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  ArcElement,
-  Title,
-  Tooltip,
-  Legend,
-} from "chart.js";
+import DoughnutChart from "../../components/DoughnutChart";
 
 // load assets
 import GvvbackImage from "../../assets/image/gvv_back.png";
-
-// Register the components
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  ArcElement,
-  Title,
-  Tooltip,
-  Legend
-);
-
-// Doughnut chart
-const DoughnutChart = () => {
-  const data = {
-    datasets: [
-      {
-        data: [45, 20, 5, 8, 5, 7, 7, 3], // 55% staked, 45% not staked
-        backgroundColor: [
-          "#0f42f2",
-          "#195818",
-          "#b8379b",
-          "#deebbc",
-          "#3789b8",
-          "#cbfb45",
-          "#deebbc",
-          "#fa5757",
-        ], // Colors for the chart
-        borderColor: [
-          "#000",
-          "#000",
-          "#000",
-          "#000",
-          "#000",
-          "#000",
-          "#000",
-          "#000",
-        ],
-      },
-    ],
-    labels: [
-      "Private Round Stage 1",
-      "Private Round Stage 2",
-      "Public Round",
-      "Top Influencer's Award",
-      "Private Round Stage 1",
-      "Team",
-      "Marketing, R&D, Staking",
-      "Treasury",
-    ],
-  };
-
-  const options = {
-    responsive: true,
-    plugins: {
-      legend: {
-        display: false,
-        position: "bottom",
-      },
-      tooltip: {
-        callbacks: {
-          title: (tooltipItem) => `${tooltipItem[0].raw}%`,
-          label: function (tooltipItem) {
-            return `${tooltipItem.label}`;
-          },
-        },
-      },
-    },
-  };
-
-  return <Doughnut data={data} options={options} />;
-};
 
 const Description = (props) => {
   const { t } = useTranslation();

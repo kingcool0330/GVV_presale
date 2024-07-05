@@ -14,6 +14,8 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
+import LineChart from "../components/LineChart";
+import DoughnutChart from "../components/DoughnutChart";
 import { useTranslation } from "react-i18next";
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
 
@@ -35,100 +37,6 @@ ChartJS.register(
   Tooltip,
   Legend
 );
-
-const LineChart = () => {
-  const data = {
-    labels: ["January", "February", "March", "April", "May", "June", "July"],
-    datasets: [
-      {
-        label: "Annual Chart",
-        fill: true,
-        lineTension: 0.1,
-        borderColor: "#0f42f2",
-        borderCapStyle: "butt",
-        borderDash: [],
-        borderDashOffset: 0.0,
-        borderJoinStyle: "miter",
-        pointBorderColor: "#0f42f2",
-        pointBackgroundColor: "#fff",
-        pointBorderWidth: 1,
-        pointHoverRadius: 5,
-        pointHoverBackgroundColor: "#0f42f2",
-        pointHoverBorderColor: "rgba(220,220,220,1)",
-        pointHoverBorderWidth: 2,
-        pointRadius: 1,
-        pointHitRadius: 10,
-        data: [65, 59, 80, 81, 56, 55, 40],
-        backgroundColor: (context) => {
-          const ctx = context.chart.ctx;
-          const gradient = ctx.createLinearGradient(0, 0, 0, 400);
-          gradient.addColorStop(0, "rgba(255, 99, 132, 1)");
-          gradient.addColorStop(1, "rgba(54, 162, 235, 1)");
-          console.log(context, "bacgournd");
-          return gradient;
-        },
-      },
-    ],
-  };
-
-  const options = {
-    responsive: true,
-    plugins: {
-      legend: {
-        display: false,
-      },
-      tooltip: {
-        enabled: true,
-      },
-    },
-    scales: {
-      x: {
-        grid: {
-          display: false,
-        },
-      },
-      y: {
-        grid: {
-          display: false,
-        },
-      },
-    },
-  };
-
-  return <Line data={data} options={options} />;
-};
-
-const DoughnutChart = () => {
-  const data = {
-    datasets: [
-      {
-        data: [45, 55], // 55% staked, 45% not staked
-        backgroundColor: ["#FCD34D", "#1E40AF"], // Colors for the chart
-        borderColor: ["#FCD34D", "#1E40AF"],
-      },
-    ],
-    labels: ["staked", "unstaked"],
-  };
-
-  const options = {
-    responsive: true,
-    plugins: {
-      legend: {
-        position: "bottom",
-      },
-      tooltip: {
-        callbacks: {
-          title: (tooltipItem) => `${tooltipItem[0].raw}%`,
-          label: function (tooltipItem) {
-            return `${tooltipItem.label}`;
-          },
-        },
-      },
-    },
-  };
-
-  return <Doughnut data={data} options={options} />;
-};
 
 const Home = (props) => {
   const { t } = useTranslation();

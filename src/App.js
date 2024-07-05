@@ -15,6 +15,7 @@ import Presale from "./pages/presale/Presale";
 import Presale1 from "./pages/presale/Presale1";
 import Presale2 from "./pages/presale/Presale2";
 import Staking from "./pages/staking";
+import Login from "./pages/auth/Login";
 import Venture from "./pages/venture";
 import Footer from "./pages/layout/Footer";
 
@@ -42,6 +43,7 @@ const App = (props) => {
         <SignHeader />
         <Routes>
           <Route path="/" exact element={<Home />} />
+          <Route path="/login" exact element={<Login />} />
           <Route path="/presale" exact element={<Presale />} />
           <Route path="/presale1" exact element={<Presale1 />} />
           <Route path="/presale2" exact element={<Presale2 />} />
