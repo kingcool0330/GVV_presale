@@ -1,8 +1,11 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link, useLocation } from "react-router-dom";
+
+// icons from MUI
 import MenuIcon from "@mui/icons-material/Menu";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import CloseIcon from "@mui/icons-material/Close";
 import Web3 from "web3";
 
 // import logo image
@@ -24,10 +27,30 @@ const SignHeader = () => {
   const [presaleMenuFlag, setPresaleMenuFalg] = useState(false);
   const [stakeMenuFlag, setStakeMenuFlag] = useState(false);
   const [ventureMenuFlag, setVentureMenuFlag] = useState(false);
+  const [responsivePresaleMenuFlag, setResponsivePresaleMenuFalg] =
+    useState(false);
+  const [responsiveStakeMenuFlag, setResponsiveStakeMenuFlag] = useState(false);
+  const [responsiveVentureMenuFlag, setResponsiveVentureMenuFlag] =
+    useState(false);
+  const [responsiveMenuFlag, setResponsiveMenuFlag] = useState(false);
 
   // Connect button
   const [account, setAccount] = useState("CONNECT");
 
+  // responsive menu toggle functions
+  const handleResponsivePresaleMenuToggle = () => {
+    setResponsivePresaleMenuFalg(!responsivePresaleMenuFlag);
+  };
+
+  const handleResponsiveStakeMenuToggle = () => {
+    setResponsiveStakeMenuFlag(!responsiveStakeMenuFlag);
+  };
+
+  const handleResponsiveVentureMenuToggle = () => {
+    setResponsiveVentureMenuFlag(!responsiveVentureMenuFlag);
+  };
+
+  // menu toggle functions
   const handlePresaleMenuToggle = () => {
     setPresaleMenuFalg(!presaleMenuFlag);
   };
@@ -93,6 +116,24 @@ const SignHeader = () => {
     };
   }, []);
 
+  // set initial menu drop as show/close
+  useEffect(() => {
+    location.pathname.includes("/presale")
+      ? setResponsivePresaleMenuFalg(true)
+      : setResponsivePresaleMenuFalg(false);
+    location.pathname.includes("/staking")
+      ? setResponsiveStakeMenuFlag(true)
+      : setResponsiveStakeMenuFlag(false);
+    location.pathname.includes("/venture")
+      ? setResponsiveVentureMenuFlag(true)
+      : setResponsiveVentureMenuFlag(false);
+  }, []);
+  // end
+
+  const handleToggleMenuBar = () => {
+    setResponsiveMenuFlag(!responsiveMenuFlag);
+  };
+
   return (
     <div className="sign-header">
       <div className="container">
@@ -100,7 +141,11 @@ const SignHeader = () => {
           <div className="logo">
             <img src={LogoImage} className="image" />
             <h2 className="title">GVV</h2>
-            <button type="button" className="responsive-menu-btn">
+            <button
+              type="button"
+              className="responsive-menu-btn"
+              onClick={handleToggleMenuBar} // toggle responsive menu action
+            >
               <MenuIcon />
             </button>
           </div>
@@ -170,7 +215,7 @@ const SignHeader = () => {
                 }
                 onClick={handleStakeMenuToggle}
               >
-                {t("Sales Round")}{" "}
+                {t("Staking")}{" "}
                 <KeyboardArrowDownIcon
                   className={stakeMenuFlag ? "arrow-btn" : ""}
                 />
@@ -263,6 +308,176 @@ const SignHeader = () => {
                 {t("connect")}
               </button>
             )}
+          </div>
+        </div>
+        <div
+          className={
+            responsiveMenuFlag ? "responsive-menu active" : "responsive-menu"
+          }
+        >
+          <div className="responsive-section">
+            <div className="logo-section">
+              <img src={LogoImage} className="logo-image" />
+              <h2 className="logo-title">GVV</h2>
+            </div>
+            <div className="responsive-menu-list">
+              <div className="menu-item">
+                <Link
+                  to="/"
+                  className={
+                    location.pathname === "/" ? "a-link active" : "a-link"
+                  }
+                  onClick={handleToggleMenuBar}
+                >
+                  {t("Home")}
+                </Link>
+              </div>
+              <div className="menu-item">
+                <button
+                  type="button"
+                  className={
+                    location.pathname.includes("/presale")
+                      ? "button-link active"
+                      : "button-link"
+                  }
+                  onClick={handleResponsivePresaleMenuToggle}
+                >
+                  {t("Sales Round")}{" "}
+                  <KeyboardArrowDownIcon
+                    className={responsivePresaleMenuFlag ? "arrow-btn" : ""}
+                  />
+                </button>
+                {responsivePresaleMenuFlag ? (
+                  <div className="drop-menu">
+                    <Link
+                      to="/presale"
+                      className={
+                        location.pathname === "/presale"
+                          ? "a-link active"
+                          : "a-link"
+                      }
+                      onClick={handleToggleMenuBar}
+                    >
+                      {t("Presale")}
+                    </Link>
+                    <Link
+                      to="/presale1"
+                      className={
+                        location.pathname === "/presale1"
+                          ? "a-link active"
+                          : "a-link"
+                      }
+                      onClick={handleToggleMenuBar}
+                    >
+                      {t("Presale")} 1
+                    </Link>
+                    <Link
+                      to="/presale2"
+                      className={
+                        location.pathname === "/presale2"
+                          ? "a-link active"
+                          : "a-link"
+                      }
+                      onClick={handleToggleMenuBar}
+                    >
+                      {t("Presale")} 2
+                    </Link>
+                  </div>
+                ) : null}
+              </div>
+              <div className="menu-item">
+                <button
+                  type="button"
+                  className={
+                    location.pathname.includes("/staking")
+                      ? "button-link active"
+                      : "button-link"
+                  }
+                  onClick={handleResponsiveStakeMenuToggle}
+                >
+                  {t("Staking")}{" "}
+                  <KeyboardArrowDownIcon
+                    className={responsiveStakeMenuFlag ? "arrow-btn" : ""}
+                  />
+                </button>
+
+                {responsiveStakeMenuFlag ? (
+                  <div className="drop-menu">
+                    <Link
+                      to="/staking/withdraw"
+                      className={
+                        location.pathname === "/staking/withdraw"
+                          ? "a-link active"
+                          : "a-link"
+                      }
+                      onClick={handleToggleMenuBar}
+                    >
+                      {t("Withdraw")}
+                    </Link>
+                    <Link
+                      to="/staking/stake"
+                      className={
+                        location.pathname === "/staking/stake"
+                          ? "a-link active"
+                          : "a-link"
+                      }
+                      onClick={handleToggleMenuBar}
+                    >
+                      {t("Stake")}
+                    </Link>
+                  </div>
+                ) : null}
+              </div>
+              <div className="menu-item">
+                <button
+                  type="button"
+                  className={
+                    location.pathname.includes("/venture")
+                      ? "button-link active"
+                      : "button-link"
+                  }
+                  onClick={handleResponsiveVentureMenuToggle}
+                >
+                  {t("Our ventures")}
+                  <KeyboardArrowDownIcon
+                    className={responsiveVentureMenuFlag ? "arrow-btn" : ""}
+                  />
+                </button>
+                {responsiveVentureMenuFlag ? (
+                  <div className="drop-menu">
+                    <Link
+                      to="/venture/description"
+                      className={
+                        location.pathname === "/venture/description"
+                          ? "a-link active"
+                          : "a-link"
+                      }
+                      onClick={handleToggleMenuBar}
+                    >
+                      {t("Description")}
+                    </Link>
+                    <Link
+                      to="/venture/list"
+                      className={
+                        location.pathname === "/venture/list"
+                          ? "a-link active"
+                          : "a-link"
+                      }
+                      onClick={handleToggleMenuBar}
+                    >
+                      {t("List")}
+                    </Link>
+                  </div>
+                ) : null}
+              </div>
+            </div>
+            <button
+              type="button"
+              className="close-btn"
+              onClick={handleToggleMenuBar}
+            >
+              <CloseIcon />
+            </button>
           </div>
         </div>
       </div>
