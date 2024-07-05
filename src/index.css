@@ -1,9 +1,20 @@
+@font-face {
+  font-family: "BankGothic"; /* The name you want to give to the font */
+  src: url("./assets/font/Bank\ Gothic\ Light\ Regular.otf"),
+    url("./assets/font/bank\ gothic\ medium\ bt.ttf"),
+    url("./assets/font/BankGothic\ Bold.ttf"),
+    url("./assets/font/BankGothic\ Md\ BT.ttf"),
+    url("./assets/font/BankGothicMediumBT.ttf");
+  font-weight: normal; /* Specify the font weight */
+  font-style: normal; /* Specify the font style */
+}
+
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
   color: var(--white-color);
-  font-family: sans-serif;
+  font-family: BankGothic;
   user-select: none;
   font-size: 16px;
 }

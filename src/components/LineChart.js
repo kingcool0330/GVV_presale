@@ -27,12 +27,25 @@ ChartJS.register(
 
 const LineChart = () => {
   const data = {
-    labels: ["January", "February", "March", "April", "May", "June", "July"],
+    labels: [
+      "January",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December",
+    ],
     datasets: [
       {
         label: "Annual Chart",
         fill: true,
-        lineTension: 0.4,
+        lineTension: 0,
         borderColor: "#0f42f2",
         borderCapStyle: "round",
         borderDash: [],
@@ -47,7 +60,7 @@ const LineChart = () => {
         pointHoverBorderWidth: 2,
         pointRadius: 1,
         pointHitRadius: 10,
-        data: [65, 59, 80, 81, 56, 55, 40],
+        data: [65, 59, 80, 81, 56, 55, 40, 30, 50, 43, 100, 87],
       },
     ],
   };
