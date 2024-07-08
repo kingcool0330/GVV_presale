@@ -2,39 +2,17 @@ import React, { useEffect } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { Route, Routes } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { handleLoading } from "../../actions/loadingActions";
 import Withdrawing from "./Withdrawing";
 import Stake from "./Stake";
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  ArcElement,
-  Title,
-  Tooltip,
-  Legend,
-} from "chart.js";
-import { useTranslation } from "react-i18next";
+import Claim from "./Claim";
 
 // load assets
 import PresaleOverviewImage from "../../assets/image/overview.png";
 
 // load style
 import "./staking.scss";
-
-// Register the components
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  ArcElement,
-  Title,
-  Tooltip,
-  Legend
-);
 
 const Index = (props) => {
   const { t } = useTranslation();
@@ -78,6 +56,7 @@ const Index = (props) => {
           <Routes>
             <Route path="/withdraw" exact element={<Withdrawing />} />
             <Route path="/stake" exact element={<Stake />} />
+            <Route path="/claim" exact element={<Claim />} />
           </Routes>
         </div>
       </div>

@@ -244,6 +244,16 @@ const SignHeader = () => {
                       {t("Stake")}
                     </Link>
                   </li>
+                  <li className="dropdown-item">
+                    <Link
+                      to="/staking/claim"
+                      className={
+                        location.pathname === "/staking/claim" ? "active" : ""
+                      }
+                    >
+                      {t("Claim")}
+                    </Link>
+                  </li>
                 </ul>
               )}
             </div>
