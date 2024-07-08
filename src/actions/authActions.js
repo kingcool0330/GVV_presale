@@ -6,9 +6,11 @@ import { SET_USERS, GET_AUTHLOADING_DATA } from "./constants";
 // Sign - Get User Token
 export const signUser = (userData) => (dispatch) => {
   dispatch(setAuthLoading(true));
-
+  const headers = { "ngrok-skip-browser-warning": "69420" };
   axios
-    .post(apiUrl + "/api/user/sign", userData)
+    .post(apiUrl + "/api/user/sign", userData, {
+      headers: headers,
+    })
     .then((res) => {
       // Save to localStorage
       const { token } = res.data;

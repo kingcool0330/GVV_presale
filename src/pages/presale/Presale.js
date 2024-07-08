@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { ethers } from "ethers";
+import { ethers, BigNumber } from "ethers";
 import { handleLoading } from "../../actions/loadingActions";
 import ErrorIcon from "@mui/icons-material/Error";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
@@ -24,21 +24,22 @@ import { useTranslation } from "react-i18next";
 // Contract Assets
 import Web3 from "web3";
 import CONTRACT_ADDRESS from "../../utils/config";
-import CONTRACT_ABI_GVV from "../../utils/gvv.json";
 import CONTRACT_ABI_PRESALE from "../../utils/presaleVesting.json";
+import CONTRACT_ABI_USDT from "../../utils/usdt.json";
 
 const Presale = (props) => {
   const { t } = useTranslation();
   const [presaleCost, setPresaleCost] = useState(0.45);
   const [presaleCount, setPresaleCount] = useState(1);
-  const [loading, setLoading] = useState(false);
   const [buyModalFlag, setBuyModalFlag] = useState(false);
 
-  const override = {
-    display: "block",
-    margin: "0 auto",
-    borderColor: "red",
-  };
+  const [ETH_loading, setETH_Loading] = useState(false);
+  const [BNB_loading, setBNB_Loading] = useState(false);
+  const [MATIC_loading, setMATIC_Loading] = useState(false);
+
+  const [ERC20_loading, setERC20_Loading] = useState(false);
+  const [BEP20_loading, setBEP20_Loading] = useState(false);
+  const [MATIC_USDT_loading, setMATIC_USDT_Loading] = useState(false);
 
   useEffect(() => {
     props.handleLoading(true);
@@ -57,11 +58,32 @@ const Presale = (props) => {
     );
   };
 
-  const handleBuyGVV = async () => {
-    setLoading(true);
+  const switchNetwork = async (chainId) => {
+    console.log(chainId);
+    const ethereum = window.ethereum;
+    try {
+      await ethereum.request({
+        method: "wallet_switchEthereumChain",
+        params: [{ chainId: chainId }],
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleBuyGVV_Ethereum = async () => {
+    setETH_Loading(true);
     const accounts = await window.ethereum.request({ method: "eth_accounts" });
 
     if (accounts.length > 0) {
+      const chainId = await window.ethereum.request({
+        method: "eth_chainId",
+      });
+
+      if (chainId != "0xaa36a7") {
+        await switchNetwork("0xaa36a7");
+      }
+
       try {
         // Create Web3 instance
         const web3Instance = new Web3(window.ethereum);
@@ -78,11 +100,7 @@ const Presale = (props) => {
           );
           const data = await response.json();
 
-          console.log(data);
-
           const ethAmount = Number(presaleCost) / Number(data.ethereum.usd);
-
-          console.log(presaleCount, presaleCost, ethAmount);
 
           // Correct way to call the contract method
           const buytokenprogress = await presale_contractInstance.methods
@@ -93,18 +111,360 @@ const Presale = (props) => {
             });
 
           console.log("Transaction successful:", buytokenprogress);
-          setLoading(false);
+          setETH_Loading(false);
         } catch (error) {
           console.log(error);
-          setLoading(false);
+          setETH_Loading(false);
         }
       } catch (error) {
         console.error("Error calling contract method:", error);
-        setLoading(false);
+        setETH_Loading(false);
       }
     } else {
       console.log("Please connect to MetaMask first");
-      setLoading(false);
+      setETH_Loading(false);
+    }
+  };
+
+  const handleBuyGVV_BNB = async () => {
+    setBNB_Loading(true);
+    const accounts = await window.ethereum.request({ method: "eth_accounts" });
+
+    if (accounts.length > 0) {
+      try {
+        const chainId = await window.ethereum.request({
+          method: "eth_chainId",
+        });
+
+        if (chainId != "0x61") {
+          await switchNetwork("0x61");
+        }
+
+        // Create Web3 instance
+        const web3Instance = new Web3(window.ethereum);
+
+        // Create contract instance
+        const presale_contractInstance = new web3Instance.eth.Contract(
+          CONTRACT_ABI_PRESALE,
+          CONTRACT_ADDRESS.PresaleVestingAddr[5]
+        );
+
+        try {
+          const response = await fetch(
+            "https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd"
+          );
+          const data = await response.json();
+
+          const ethAmount = Number(presaleCost) / Number(data.ethereum.usd);
+
+          // Correct way to call the contract method
+          const buytokenprogress = await presale_contractInstance.methods
+            .buyTokensByNativeCoin(String(presaleCount), String(2))
+            .send({
+              from: accounts[0],
+              value: web3Instance.utils.toWei(String(ethAmount), "ether"),
+            });
+
+          console.log("Transaction successful:", buytokenprogress);
+          setBNB_Loading(false);
+        } catch (error) {
+          console.log(error);
+          setBNB_Loading(false);
+        }
+      } catch (error) {
+        console.log(error);
+        setBNB_Loading(false);
+      }
+    } else {
+      console.log("Please connect to MetaMask first");
+      setBNB_Loading(false);
+    }
+  };
+
+  const handleBuyGVV_MATIC = async () => {
+    setMATIC_Loading(true);
+    const accounts = await window.ethereum.request({ method: "eth_accounts" });
+
+    if (accounts.length > 0) {
+      try {
+        const chainId = await window.ethereum.request({
+          method: "eth_chainId",
+        });
+
+        console.log(chainId);
+        if (chainId != "0x13882") {
+          await switchNetwork("0x13882");
+        }
+
+        // Create Web3 instance
+        const web3Instance = new Web3(window.ethereum);
+
+        // Create contract instance
+        const presale_contractInstance = new web3Instance.eth.Contract(
+          CONTRACT_ABI_PRESALE,
+          CONTRACT_ADDRESS.PresaleVestingAddr[5]
+        );
+
+        try {
+          const response = await fetch(
+            "https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd"
+          );
+          const data = await response.json();
+
+          const ethAmount = Number(presaleCost) / Number(data.ethereum.usd);
+
+          // Correct way to call the contract method
+          const buytokenprogress = await presale_contractInstance.methods
+            .buyTokensByNativeCoin(String(presaleCount), String(2))
+            .send({
+              from: accounts[0],
+              value: web3Instance.utils.toWei(String(ethAmount), "ether"),
+            });
+
+          console.log("Transaction successful:", buytokenprogress);
+          setMATIC_Loading(false);
+        } catch (error) {
+          console.log(error);
+          setMATIC_Loading(false);
+        }
+      } catch (error) {
+        console.log(error);
+        setMATIC_Loading(false);
+      }
+    } else {
+      console.log("Please connect to MetaMask first");
+      setMATIC_Loading(false);
+    }
+  };
+
+  const handleBuyGVV_ERC20_USDT = async () => {
+    setERC20_Loading(true);
+    const accounts = await window.ethereum.request({ method: "eth_accounts" });
+    if (accounts.length > 0) {
+      try {
+        const chainId = await window.ethereum.request({
+          method: "eth_chainId",
+        });
+        if (chainId != "0xaa36a7") {
+          await switchNetwork("0xaa36a7");
+        }
+
+        // Create Web3 instance
+        const web3Instance = new Web3(window.ethereum);
+
+        // Create contract instances
+        const presale_contractInstance = new web3Instance.eth.Contract(
+          CONTRACT_ABI_PRESALE,
+          CONTRACT_ADDRESS.PresaleVestingAddr[5]
+        );
+
+        const USDTContract = new web3Instance.eth.Contract(
+          CONTRACT_ABI_USDT,
+          CONTRACT_ADDRESS.USDTAddr[5]
+        );
+
+        const amountToApprove = ethers.utils.parseUnits(String(presaleCost), 6);
+
+        // Check current allowance
+        const currentAllowance = await USDTContract.methods
+          .allowance(accounts[0], CONTRACT_ADDRESS.PresaleVestingAddr[5])
+          .call();
+
+        const currentAllowanceBN = BigNumber.from(currentAllowance);
+        const amountToApproveBN = BigNumber.from(amountToApprove);
+
+        if (currentAllowanceBN.lt(amountToApproveBN)) {
+          // Approve if current allowance is less than required
+          try {
+            const approveTransaction = await USDTContract.methods
+              .approve(
+                CONTRACT_ADDRESS.PresaleVestingAddr[5],
+                String(amountToApprove)
+              )
+              .send({ from: accounts[0] });
+
+            console.log("Approval successful:", approveTransaction);
+          } catch (error) {
+            console.error("Approval failed:", error);
+            setERC20_Loading(false);
+            return;
+          }
+        }
+
+        // Now proceed with buying tokens
+        try {
+          const buytokenprogress = await presale_contractInstance.methods
+            .buyTokensByUSDT(String(presaleCount), String(2))
+            .send({
+              from: accounts[0],
+            });
+
+          console.log("Transaction successful:", buytokenprogress);
+        } catch (error) {
+          console.error("Buy tokens failed:", error);
+        }
+      } catch (error) {
+        console.error("Error:", error);
+      } finally {
+        setERC20_Loading(false);
+      }
+    } else {
+      console.log("Please connect to MetaMask first");
+      setERC20_Loading(false);
+    }
+  };
+
+  const handleBuyGVV_BEP20_USDT = async () => {
+    setBEP20_Loading(true);
+    const accounts = await window.ethereum.request({ method: "eth_accounts" });
+    if (accounts.length > 0) {
+      try {
+        const chainId = await window.ethereum.request({
+          method: "eth_chainId",
+        });
+        if (chainId != "0x61") {
+          await switchNetwork("0x61");
+        }
+
+        // Create Web3 instance
+        const web3Instance = new Web3(window.ethereum);
+
+        // Create contract instances
+        const presale_contractInstance = new web3Instance.eth.Contract(
+          CONTRACT_ABI_PRESALE,
+          CONTRACT_ADDRESS.PresaleVestingAddr[5]
+        );
+
+        const USDTContract = new web3Instance.eth.Contract(
+          CONTRACT_ABI_USDT,
+          CONTRACT_ADDRESS.USDTAddr[5]
+        );
+
+        const amountToApprove = ethers.utils.parseUnits(String(presaleCost), 6);
+
+        // Check current allowance
+        const currentAllowance = await USDTContract.methods
+          .allowance(accounts[0], CONTRACT_ADDRESS.PresaleVestingAddr[5])
+          .call();
+
+        const currentAllowanceBN = BigNumber.from(currentAllowance);
+        const amountToApproveBN = BigNumber.from(amountToApprove);
+
+        if (currentAllowanceBN.lt(amountToApproveBN)) {
+          // Approve if current allowance is less than required
+          try {
+            const approveTransaction = await USDTContract.methods
+              .approve(
+                CONTRACT_ADDRESS.PresaleVestingAddr[5],
+                String(amountToApprove)
+              )
+              .send({ from: accounts[0] });
+
+            console.log("Approval successful:", approveTransaction);
+          } catch (error) {
+            console.error("Approval failed:", error);
+            setBEP20_Loading(false);
+            return;
+          }
+        }
+
+        // Now proceed with buying tokens
+        try {
+          const buytokenprogress = await presale_contractInstance.methods
+            .buyTokensByUSDT(String(presaleCount), String(2))
+            .send({
+              from: accounts[0],
+            });
+
+          console.log("Transaction successful:", buytokenprogress);
+        } catch (error) {
+          console.error("Buy tokens failed:", error);
+        }
+      } catch (error) {
+        console.error("Error:", error);
+      } finally {
+        setBEP20_Loading(false);
+      }
+    } else {
+      console.log("Please connect to MetaMask first");
+      setBEP20_Loading(false);
+    }
+  };
+
+  const handleBuyGVV_MATIC_USDT = async () => {
+    setMATIC_USDT_Loading(true);
+    const accounts = await window.ethereum.request({ method: "eth_accounts" });
+    if (accounts.length > 0) {
+      try {
+        const chainId = await window.ethereum.request({
+          method: "eth_chainId",
+        });
+        if (chainId != "0x13882") {
+          await switchNetwork("0x13882");
+        }
+
+        // Create Web3 instance
+        const web3Instance = new Web3(window.ethereum);
+
+        // Create contract instances
+        const presale_contractInstance = new web3Instance.eth.Contract(
+          CONTRACT_ABI_PRESALE,
+          CONTRACT_ADDRESS.PresaleVestingAddr[5]
+        );
+
+        const USDTContract = new web3Instance.eth.Contract(
+          CONTRACT_ABI_USDT,
+          CONTRACT_ADDRESS.USDTAddr[5]
+        );
+
+        const amountToApprove = ethers.utils.parseUnits(String(presaleCost), 6);
+
+        // Check current allowance
+        const currentAllowance = await USDTContract.methods
+          .allowance(accounts[0], CONTRACT_ADDRESS.PresaleVestingAddr[5])
+          .call();
+
+        const currentAllowanceBN = BigNumber.from(currentAllowance);
+        const amountToApproveBN = BigNumber.from(amountToApprove);
+
+        if (currentAllowanceBN.lt(amountToApproveBN)) {
+          // Approve if current allowance is less than required
+          try {
+            const approveTransaction = await USDTContract.methods
+              .approve(
+                CONTRACT_ADDRESS.PresaleVestingAddr[5],
+                String(amountToApprove)
+              )
+              .send({ from: accounts[0] });
+
+            console.log("Approval successful:", approveTransaction);
+          } catch (error) {
+            console.error("Approval failed:", error);
+            setMATIC_USDT_Loading(false);
+            return;
+          }
+        }
+
+        // Now proceed with buying tokens
+        try {
+          const buytokenprogress = await presale_contractInstance.methods
+            .buyTokensByUSDT(String(presaleCount), String(2))
+            .send({
+              from: accounts[0],
+            });
+
+          console.log("Transaction successful:", buytokenprogress);
+        } catch (error) {
+          console.error("Buy tokens failed:", error);
+        }
+      } catch (error) {
+        console.error("Error:", error);
+      } finally {
+        setMATIC_USDT_Loading(false);
+      }
+    } else {
+      console.log("Please connect to MetaMask first");
+      setMATIC_USDT_Loading(false);
     }
   };
 
@@ -160,14 +520,7 @@ const Presale = (props) => {
                 className="presale-buy-btn"
                 onClick={handleBuyModal}
               >
-                {!loading && t("buy-sgvv")}
-                <BeatLoader
-                  color={"#000000"}
-                  loading={loading}
-                  size={30}
-                  aria-label="Loading Spinner"
-                  data-testid="loader"
-                />
+                t{"buy-sgvv"}
               </button>
             </div>
           </div>
@@ -210,29 +563,107 @@ const Presale = (props) => {
 
       <div className={buyModalFlag ? "buy-modal up" : "buy-modal"}>
         <div className="buy-section">
-          <button type="button" className="buy-item">
-            <img src={EthereumImage} className="coin-image" alt="coin" />
+          <button
+            type="button"
+            className="buy-item"
+            onClick={() => handleBuyGVV_Ethereum()}
+          >
+            {!ETH_loading && (
+              <img src={EthereumImage} className="coin-image" alt="coin" />
+            )}
             Ethereum
+            <BeatLoader
+              color={"#fff"}
+              loading={ETH_loading}
+              size={30}
+              aria-label="Loading Spinner"
+              data-testid="loader"
+            />
           </button>
-          <button type="button" className="buy-item">
-            <img src={UsdtImage} className="coin-image" alt="coin" />
-            ERC20 USDT
-          </button>
-          <button type="button" className="buy-item">
-            <img src={MaticImage} className="coin-image" alt="coin" />
-            Matic
-          </button>
-          <button type="button" className="buy-item">
-            <img src={UsdtImage} className="coin-image" alt="coin" />
-            Polygon USDT
-          </button>
-          <button type="button" className="buy-item">
-            <img src={BnbImage} className="coin-image" alt="coin" />
+          <button
+            type="button"
+            className="buy-item"
+            onClick={() => handleBuyGVV_BNB()}
+          >
+            {!BNB_loading && (
+              <img src={BnbImage} className="coin-image" alt="coin" />
+            )}
             BNB
+            <BeatLoader
+              color={"#fff"}
+              loading={BNB_loading}
+              size={30}
+              aria-label="Loading Spinner"
+              data-testid="loader"
+            />
           </button>
-          <button type="button" className="buy-item">
-            <img src={UsdtImage} className="coin-image" alt="coin" />
+          <button
+            type="button"
+            className="buy-item"
+            onClick={() => handleBuyGVV_MATIC()}
+          >
+            {!MATIC_loading && (
+              <img src={MaticImage} className="coin-image" alt="coin" />
+            )}
+            Matic
+            <BeatLoader
+              color={"#fff"}
+              loading={MATIC_loading}
+              size={30}
+              aria-label="Loading Spinner"
+              data-testid="loader"
+            />
+          </button>
+          <button
+            type="button"
+            className="buy-item"
+            onClick={() => handleBuyGVV_ERC20_USDT()}
+          >
+            {!ERC20_loading && (
+              <img src={UsdtImage} className="coin-image" alt="coin" />
+            )}
+            ERC20 USDT
+            <BeatLoader
+              color={"#fff"}
+              loading={ERC20_loading}
+              size={30}
+              aria-label="Loading Spinner"
+              data-testid="loader"
+            />
+          </button>
+          <button
+            type="button"
+            className="buy-item"
+            onClick={() => handleBuyGVV_BEP20_USDT()}
+          >
+            {!BEP20_loading && (
+              <img src={UsdtImage} className="coin-image" alt="coin" />
+            )}
             BEP20 USDT
+            <BeatLoader
+              color={"#fff"}
+              loading={BEP20_loading}
+              size={30}
+              aria-label="Loading Spinner"
+              data-testid="loader"
+            />
+          </button>
+          <button
+            type="button"
+            className="buy-item"
+            onClick={() => handleBuyGVV_MATIC_USDT()}
+          >
+            {!MATIC_USDT_loading && (
+              <img src={UsdtImage} className="coin-image" alt="coin" />
+            )}
+            Polygon USDT
+            <BeatLoader
+              color={"#fff"}
+              loading={MATIC_USDT_loading}
+              size={30}
+              aria-label="Loading Spinner"
+              data-testid="loader"
+            />
           </button>
           <button
             type="button"
