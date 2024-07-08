@@ -25,7 +25,7 @@ const Index = (props) => {
   }, []);
 
   return (
-    <div className="staking">
+    <div className="staking-m">
       <div className="container">
         <div className="section">
           <div className="overview">
