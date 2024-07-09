@@ -93,6 +93,7 @@ const SignHeader = () => {
         await window.ethereum.request({ method: "eth_requestAccounts" });
         const accounts = await web3.eth.getAccounts();
         setAccount(accounts[0]);
+        localStorage.setItem("wallet", accounts[0]);
       } catch (error) {
         console.error("Error connecting to MetaMask:", error);
       }

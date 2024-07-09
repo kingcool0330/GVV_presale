@@ -22,6 +22,12 @@ const Claim = (props) => {
   }, []);
 
   useEffect(() => {
+    if (localStorage.getItem("wallet")) {
+      setAccount(localStorage.getItem("wallet"));
+    }
+  }, []);
+
+  useEffect(() => {
     setEmail(props.auth.isAuthenticated ? props.auth.user.email : "");
   }, [props]);
 
@@ -30,7 +36,7 @@ const Claim = (props) => {
       <div className="claim-logo">
         <CloseIcon />
       </div>
-      <div className="claim-title">xxx@gmail.com</div>
+      <div className="claim-title">{email}</div>
       <div className="amount-group">
         <p className="amount">$GVV500000</p>
         <p className="status">Available</p>
