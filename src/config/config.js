@@ -1,3 +1,3 @@
 module.exports = {
-  apiUrl: "http://192.168.106.59:5000",
+  apiUrl: "https://3e44-172-86-123-74.ngrok-free.app",
 };

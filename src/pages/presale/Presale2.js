@@ -25,7 +25,9 @@ import { useTranslation } from "react-i18next";
 import Web3 from "web3";
 import CONTRACT_ADDRESS from "../../utils/config";
 import CONTRACT_ABI_PRESALE from "../../utils/presaleVesting.json";
-import CONTRACT_ABI_USDT from "../../utils/usdt.json";
+import CONTRACT_ABI_ETH_USDT from "../../utils/eth_usdt.json";
+import CONTRACT_ABI_BSC_USDT from "../../utils/bsc_usdt.json";
+import CONTRACT_ABI_POLY_USDT from "../../utils/poly_usdt.json";
 
 const Presale2 = (props) => {
   const { t } = useTranslation();
@@ -81,8 +83,8 @@ const Presale2 = (props) => {
         method: "eth_chainId",
       });
 
-      if (chainId != "0xaa36a7") {
-        await switchNetwork("0xaa36a7");
+      if (chainId !== "0x1") {
+        await switchNetwork("0x1");
       }
 
       try {
@@ -92,7 +94,7 @@ const Presale2 = (props) => {
         // Create contract instance
         const presale_contractInstance = new web3Instance.eth.Contract(
           CONTRACT_ABI_PRESALE,
-          CONTRACT_ADDRESS.PresaleVestingAddr[5]
+          CONTRACT_ADDRESS.PresaleVestingAddr[1]
         );
 
         try {
@@ -137,8 +139,8 @@ const Presale2 = (props) => {
           method: "eth_chainId",
         });
 
-        if (chainId != "0x61") {
-          await switchNetwork("0x61");
+        if (chainId !== "0x38") {
+          await switchNetwork("0x38");
         }
 
         // Create Web3 instance
@@ -147,16 +149,16 @@ const Presale2 = (props) => {
         // Create contract instance
         const presale_contractInstance = new web3Instance.eth.Contract(
           CONTRACT_ABI_PRESALE,
-          CONTRACT_ADDRESS.PresaleVestingAddr[5]
+          CONTRACT_ADDRESS.PresaleVestingAddr[1]
         );
 
         try {
           const response = await fetch(
-            "https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd"
+            "https://api.coingecko.com/api/v3/simple/price?ids=binancecoin&vs_currencies=usd"
           );
           const data = await response.json();
 
-          const ethAmount = Number(presaleCost) / Number(data.ethereum.usd);
+          const ethAmount = Number(presaleCost) / Number(data.binancecoin.usd);
 
           // Correct way to call the contract method
           const buytokenprogress = await presale_contractInstance.methods
@@ -193,8 +195,8 @@ const Presale2 = (props) => {
         });
 
         console.log(chainId);
-        if (chainId != "0x13882") {
-          await switchNetwork("0x13882");
+        if (chainId !== "0x89") {
+          await switchNetwork("0x89");
         }
 
         // Create Web3 instance
@@ -203,16 +205,17 @@ const Presale2 = (props) => {
         // Create contract instance
         const presale_contractInstance = new web3Instance.eth.Contract(
           CONTRACT_ABI_PRESALE,
-          CONTRACT_ADDRESS.PresaleVestingAddr[5]
+          CONTRACT_ADDRESS.PresaleVestingAddr[1]
         );
 
         try {
           const response = await fetch(
-            "https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd"
+            "https://api.coingecko.com/api/v3/simple/price?ids=matic-network&vs_currencies=usd"
           );
           const data = await response.json();
 
-          const ethAmount = Number(presaleCost) / Number(data.ethereum.usd);
+          const ethAmount =
+            Number(presaleCost) / Number(data["matic-network"].usd);
 
           // Correct way to call the contract method
           const buytokenprogress = await presale_contractInstance.methods
@@ -246,8 +249,8 @@ const Presale2 = (props) => {
         const chainId = await window.ethereum.request({
           method: "eth_chainId",
         });
-        if (chainId != "0xaa36a7") {
-          await switchNetwork("0xaa36a7");
+        if (chainId !== "0x1") {
+          await switchNetwork("0x1");
         }
 
         // Create Web3 instance
@@ -256,19 +259,19 @@ const Presale2 = (props) => {
         // Create contract instances
         const presale_contractInstance = new web3Instance.eth.Contract(
           CONTRACT_ABI_PRESALE,
-          CONTRACT_ADDRESS.PresaleVestingAddr[5]
+          CONTRACT_ADDRESS.PresaleVestingAddr[1]
         );
 
         const USDTContract = new web3Instance.eth.Contract(
-          CONTRACT_ABI_USDT,
-          CONTRACT_ADDRESS.USDTAddr[5]
+          CONTRACT_ABI_ETH_USDT,
+          CONTRACT_ADDRESS.USDTAddr[1]
         );
 
         const amountToApprove = ethers.utils.parseUnits(String(presaleCost), 6);
 
         // Check current allowance
         const currentAllowance = await USDTContract.methods
-          .allowance(accounts[0], CONTRACT_ADDRESS.PresaleVestingAddr[5])
+          .allowance(accounts[0], CONTRACT_ADDRESS.PresaleVestingAddr[1])
           .call();
 
         const currentAllowanceBN = BigNumber.from(currentAllowance);
@@ -279,7 +282,7 @@ const Presale2 = (props) => {
           try {
             const approveTransaction = await USDTContract.methods
               .approve(
-                CONTRACT_ADDRESS.PresaleVestingAddr[5],
+                CONTRACT_ADDRESS.PresaleVestingAddr[1],
                 String(amountToApprove)
               )
               .send({ from: accounts[0] });
@@ -323,8 +326,8 @@ const Presale2 = (props) => {
         const chainId = await window.ethereum.request({
           method: "eth_chainId",
         });
-        if (chainId != "0x61") {
-          await switchNetwork("0x61");
+        if (chainId !== "0x38") {
+          await switchNetwork("0x38");
         }
 
         // Create Web3 instance
@@ -333,19 +336,19 @@ const Presale2 = (props) => {
         // Create contract instances
         const presale_contractInstance = new web3Instance.eth.Contract(
           CONTRACT_ABI_PRESALE,
-          CONTRACT_ADDRESS.PresaleVestingAddr[5]
+          CONTRACT_ADDRESS.PresaleVestingAddr[1]
         );
 
         const USDTContract = new web3Instance.eth.Contract(
-          CONTRACT_ABI_USDT,
-          CONTRACT_ADDRESS.USDTAddr[5]
+          CONTRACT_ABI_BSC_USDT,
+          CONTRACT_ADDRESS.USDTAddr[2]
         );
 
         const amountToApprove = ethers.utils.parseUnits(String(presaleCost), 6);
 
         // Check current allowance
         const currentAllowance = await USDTContract.methods
-          .allowance(accounts[0], CONTRACT_ADDRESS.PresaleVestingAddr[5])
+          .allowance(accounts[0], CONTRACT_ADDRESS.PresaleVestingAddr[1])
           .call();
 
         const currentAllowanceBN = BigNumber.from(currentAllowance);
@@ -356,7 +359,7 @@ const Presale2 = (props) => {
           try {
             const approveTransaction = await USDTContract.methods
               .approve(
-                CONTRACT_ADDRESS.PresaleVestingAddr[5],
+                CONTRACT_ADDRESS.PresaleVestingAddr[1],
                 String(amountToApprove)
               )
               .send({ from: accounts[0] });
@@ -400,8 +403,8 @@ const Presale2 = (props) => {
         const chainId = await window.ethereum.request({
           method: "eth_chainId",
         });
-        if (chainId != "0x13882") {
-          await switchNetwork("0x13882");
+        if (chainId !== "0x89") {
+          await switchNetwork("0x89");
         }
 
         // Create Web3 instance
@@ -410,19 +413,19 @@ const Presale2 = (props) => {
         // Create contract instances
         const presale_contractInstance = new web3Instance.eth.Contract(
           CONTRACT_ABI_PRESALE,
-          CONTRACT_ADDRESS.PresaleVestingAddr[5]
+          CONTRACT_ADDRESS.PresaleVestingAddr[1]
         );
 
         const USDTContract = new web3Instance.eth.Contract(
-          CONTRACT_ABI_USDT,
-          CONTRACT_ADDRESS.USDTAddr[5]
+          CONTRACT_ABI_POLY_USDT,
+          CONTRACT_ADDRESS.USDTAddr[3]
         );
 
         const amountToApprove = ethers.utils.parseUnits(String(presaleCost), 6);
 
         // Check current allowance
         const currentAllowance = await USDTContract.methods
-          .allowance(accounts[0], CONTRACT_ADDRESS.PresaleVestingAddr[5])
+          .allowance(accounts[0], CONTRACT_ADDRESS.PresaleVestingAddr[1])
           .call();
 
         const currentAllowanceBN = BigNumber.from(currentAllowance);
@@ -433,7 +436,7 @@ const Presale2 = (props) => {
           try {
             const approveTransaction = await USDTContract.methods
               .approve(
-                CONTRACT_ADDRESS.PresaleVestingAddr[5],
+                CONTRACT_ADDRESS.PresaleVestingAddr[1],
                 String(amountToApprove)
               )
               .send({ from: accounts[0] });
@@ -480,7 +483,7 @@ const Presale2 = (props) => {
         <div className="section">
           <div className="presale-section">
             <div className="logo">
-              <img src={PresaleImage} />
+              <img src={PresaleImage} alt="overview-image" />
             </div>
             <div className="main">
               <h1 className="title">{t("Private Sales Round")} 2</h1>
@@ -537,22 +540,38 @@ const Presale2 = (props) => {
           </div>
           <div className="presale-overview">
             <div className="item">
-              <img className="overview-image" src={PresaleOverviewImage} />
+              <img
+                className="overview-image"
+                src={PresaleOverviewImage}
+                alt="overview-image"
+              />
               <h2 className="title">{t("total supply")}</h2>
               <p className="content">$GVV 80,000,000</p>
             </div>
             <div className="item">
-              <img className="overview-image" src={PresaleOverviewImage} />
+              <img
+                className="overview-image"
+                src={PresaleOverviewImage}
+                alt="overview-image"
+              />
               <h2 className="title">{t("listing date")}</h2>
               <p className="content">02 Feb 24</p>
             </div>
             <div className="item">
-              <img className="overview-image" src={PresaleOverviewImage} />
+              <img
+                className="overview-image"
+                src={PresaleOverviewImage}
+                alt="overview-image"
+              />
               <h2 className="title">{t("total buys")}</h2>
               <p className="content">40,000</p>
             </div>
             <div className="item">
-              <img className="overview-image" src={PresaleOverviewImage} />
+              <img
+                className="overview-image"
+                src={PresaleOverviewImage}
+                alt="overview-image"
+              />
               <h2 className="title">{t("unique buyers")}</h2>
               <p className="content">10,000</p>
             </div>
@@ -563,7 +582,11 @@ const Presale2 = (props) => {
               <p className="title">{t("presale video guide")}</p>
             </div>
             <div className="video-section">
-              <img className="presale-video" src={PresaleVideo} />
+              <img
+                className="presale-video"
+                src={PresaleVideo}
+                alt="presale-video"
+              />
               <button type="button" className="presale-video-btn">
                 <PlayArrowIcon sx={{ fontSize: 60 }} />
               </button>
