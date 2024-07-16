@@ -32,7 +32,7 @@ import CONTRACT_ABI_POLY_USDT from "../../utils/poly_usdt.json";
 const Presale = (props) => {
   const { t } = useTranslation();
   const [presaleCost, setPresaleCost] = useState(0.45);
-  const [presaleCount, setPresaleCount] = useState(1);
+  const [presaleCount, setPresaleCount] = useState(0);
   const [buyModalFlag, setBuyModalFlag] = useState(false);
 
   const [ETH_loading, setETH_Loading] = useState(false);
@@ -56,7 +56,7 @@ const Presale = (props) => {
 
   const handleChangePresaleCount = (flag) => {
     setPresaleCount(
-      flag ? presaleCount + 1 : presaleCount === 1 ? 1 : presaleCount - 1
+      flag ? presaleCount + 1 : presaleCount === 0 ? 0 : presaleCount - 1
     );
   };
 
@@ -505,7 +505,7 @@ const Presale = (props) => {
                     value={presaleCount}
                     onChange={(e) =>
                       setPresaleCount(
-                        Number(e.target.value) > 0 ? Number(e.target.value) : 1
+                        Number(e.target.value) > 0 ? Number(e.target.value) : 0
                       )
                     }
                   />
@@ -523,7 +523,7 @@ const Presale = (props) => {
                 className="presale-buy-btn"
                 onClick={handleBuyModal}
               >
-                t{"buy-sgvv"}
+                {t("buy $gvv")}
               </button>
             </div>
           </div>
